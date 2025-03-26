@@ -3,8 +3,7 @@ import { Register } from "./components/Register";
 import { Login } from "./components/Login";
 import DashBoard from "./components/DashBoard";
 import "./App.css";
-import store from "./store";
-import { Provider } from "react-redux";
+
 import Navbar from "./components/Navbar";
 import { Logout } from "./components/Logout";
 
@@ -15,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   return (
-    <Provider store={store}>
+   
       <Router>  {/* ✅ Wrap everything inside Router */}
         <div>
           {/* ✅ Show Navbar only if user is authenticated */}
@@ -42,7 +41,7 @@ const App = () => {
           </Routes>
         </div>
       </Router>  
-    </Provider>
+   
   );
 };
 
