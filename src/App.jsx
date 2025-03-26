@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Register } from "./components/Register";
+import { Login } from "./components/Login";
+import DashBoard from "./components/DashBoard";
+import "./App.css";
+import store from "./store";
+import { Provider } from "react-redux";
+import Navbar from "./components/Navbar";
+import { Logout } from "./components/Logout";
 
-function App() {
-  const [count, setCount] = useState(0)
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Provider store={store}>
+      <Router>  {/* ✅ Wrap everything inside Router */}
+        <div>
+          {/* ✅ Show Navbar only if user is authenticated */}
+          {localStorage.getItem("isAuthenticated") === "true" && <Navbar />}
 
-export default App
+          <Routes>
+            {/* Redirect to Register First */}
+            <Route path="/" element={<Navigate to="/register" />} />
+
+            {/* Public Routes */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+
+            {/* ✅ Protected Route (Only for Logged-in Users) */}
+            <Route
+              path="/todo"
+              element={
+                <ProtectedRoute>
+                  <DashBoard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>  
+    </Provider>
+  );
+};
+
+export default App;
