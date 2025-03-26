@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { Register } from "./components/Register";
 import { Login } from "./components/Login";
 import DashBoard from "./components/DashBoard";
-import "./App.css";
-import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
 import { Logout } from "./components/Logout";
+import Navbar from "./components/Navbar";
+import { useEffect, useState } from "react";
+import "./App.css";
 
 // ✅ Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -18,18 +18,20 @@ const App = () => {
     localStorage.getItem("isAuthenticated") === "true"
   );
 
-  // ✅ Re-check authentication on state changes
+  // ✅ Listen for authentication state changes
   useEffect(() => {
     const checkAuth = () => {
+      console.log("🔄 Checking Authentication...");
       setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
     };
+
     window.addEventListener("storage", checkAuth);
     return () => window.removeEventListener("storage", checkAuth);
   }, []);
 
   return (
     <Router>
-      {/* ✅ Navbar is always visible, authentication just controls its buttons */}
+      {/* ✅ Navbar is always shown */}
       <Navbar isAuthenticated={isAuthenticated} />
 
       <Routes>
@@ -38,7 +40,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
 
-        {/* ✅ Protected Route (Only for Logged-in Users) */}
+        {/* ✅ Protected Route */}
         <Route
           path="/todo"
           element={

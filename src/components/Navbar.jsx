@@ -1,18 +1,33 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const Navbar = ({ isAuthenticated }) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === "true"
+  );
+
+  useEffect(() => {
+    const updateAuthState = () => {
+      setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
+    };
+
+    window.addEventListener("storage", updateAuthState);
+    return () => window.removeEventListener("storage", updateAuthState);
+  }, []);
 
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", "false");
+    window.dispatchEvent(new Event("storage")); // ✅ Notify App
     navigate("/login");
-    window.location.reload(); // ✅ Ensure full state reset
   };
 
   return (
     <nav className="bg-gradient-to-r from-gray-900 to-black text-white shadow-lg p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-yellow-400">TaskMate</Link>
+        <Link to="/" className="text-2xl font-bold text-yellow-400">
+          TaskMate
+        </Link>
 
         <div className="flex space-x-6">
           <Link to="/" className="hover:text-yellow-400 transition">Home</Link>

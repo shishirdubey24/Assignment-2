@@ -1,29 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Login = ({ setIsAuthenticated }) => {  // ✅ Receiving setIsAuthenticated as a prop
+export const Login = () => {  // ✅ Receiving setIsAuthenticated as a prop
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
-
   const handleLogin = (e) => {
     e.preventDefault();
     const storedUser = JSON.parse(localStorage.getItem("user"));
-
+  
     if (storedUser && storedUser.email === credentials.email && storedUser.password === credentials.password) {
-      localStorage.setItem("isAuthenticated", "true"); // ✅ Store Auth Status
-      setIsAuthenticated(true); // ✅ Update state to trigger re-render
-      alert("✅ Login Successful!");
-      
-      window.dispatchEvent(new Event("storage"));  // ✅ Trigger storage event to update state
-      navigate("/todo"); // Redirect to dashboard
+      localStorage.setItem("isAuthenticated", "true");
+  
+      console.log("✅ Login Successful!");
+      console.log("localStorage isAuthenticated:", localStorage.getItem("isAuthenticated")); // Debug log
+  
+      window.dispatchEvent(new Event("storage")); // Ensure state update
+  
+      setTimeout(() => {
+        navigate("/todo", { replace: true }); // 🚀 Force route change
+        window.location.reload(); // ⛔ If navigate fails, force reload
+      }, 100);
     } else {
       alert("❌ Invalid credentials! Please try again.");
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
