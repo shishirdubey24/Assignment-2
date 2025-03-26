@@ -9,7 +9,7 @@ const DashBoard = () => {
 
   // Fetch JSON data from the public folder
   useEffect(() => {
-    fetch("/public/Mockdata.json",)
+    fetch("/Mockdata.json",)
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.error("Error fetching data:", error));

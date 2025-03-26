@@ -17,7 +17,7 @@ const Navbar = () => {
     setIsLoggedIn(false);
     navigate("/login"); // Redirect to login page
   };
-
+console.log("NavBar loaded")
   return (
     <nav className="bg-gradient-to-r from-gray-900 to-black text-white shadow-lg p-4">
       <div className="container mx-auto flex justify-between items-center">
