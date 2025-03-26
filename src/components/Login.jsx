@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
+export const Login = ({ setIsAuthenticated }) => {  // ✅ Receiving setIsAuthenticated as a prop
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -14,9 +14,12 @@ export const Login = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (storedUser && storedUser.email === credentials.email && storedUser.password === credentials.password) {
-      localStorage.setItem("isAuthenticated", "true"); // Set login status
+      localStorage.setItem("isAuthenticated", "true"); // ✅ Store Auth Status
+      setIsAuthenticated(true); // ✅ Update state to trigger re-render
       alert("✅ Login Successful!");
-      navigate("/todo"); // Redirect to Todo page after login
+      
+      window.dispatchEvent(new Event("storage"));  // ✅ Trigger storage event to update state
+      navigate("/todo"); // Redirect to dashboard
     } else {
       alert("❌ Invalid credentials! Please try again.");
     }
